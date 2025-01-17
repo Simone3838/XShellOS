@@ -104,163 +104,107 @@ void KePrintSystemInfoAdvanced()
 													g_currentConsole->width, g_currentConsole->height, g_currentConsole->type);
 	LogMsg("\e[97m");
 }
-
 void KePrintSystemInfo()
 {
-	//neofetch style:
-	int npp = MpGetNumAvailablePages(), nfpp = MpGetNumFreePages();
-	
-	char timingInfo[128];
-	timingInfo[0] = 0;
-	FormatTime(timingInfo, FORMAT_TYPE_VAR, GetTickCount() / 1000);
-	LogMsg("\e[93m N    N");
-	LogMsg("\e[93m NN   N");
-	LogMsg("\e[93m N N  N");
-	LogMsg("\e[93m N  N N");
-	LogMsg("\e[93m N   NN");
-	LogMsg("\e[93m N    N\e[95m SSSS");
-	LogMsg("\e[95m       S    S");
-	LogMsg("\e[95m       S     ");
-	LogMsg("\e[95m        SSSS ");
-	LogMsg("\e[95m            S");
-	LogMsg("\e[95m       S    S");
-	LogMsg("\e[95m        SSSS ");
-	
-	//go up a bunch
-	LogMsgNoCr("\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A");
-	
-	LogMsg("\e[14G\e[91m OS:       \e[97mNanoShell Operating System");
-	LogMsg("\e[14G\e[91m Kernel:   \e[97m%s (%d)", VersionString, VersionNumber);
-	LogMsg("\e[14G\e[91m Uptime:   \e[97m%s", timingInfo);
-	LogMsg("\e[14G\e[91m CPU:      \e[97m%s", GetCPUName());
-	LogMsg("\e[14G\e[91m CPU type: \e[97m%s", GetCPUType());
-	LogMsg("\e[14G\e[91m Memory:   \e[97m%d KB / %d KB", (npp-nfpp)*4, npp*4);
-	LogMsg("\e[14G\e[91m ");
-	LogMsg("\e[14G\e[91m ");
-	LogMsg("\e[14G\e[91m ");
-	LogMsg("\e[14G\e[91m ");
-	LogMsg("\e[14G\e[91m ");
-	LogMsg("\e[14G\e[91m ");
-	LogMsg("\e[0m");
-}
-
-multiboot_info_t *g_pMultibootInfo;
-
-char g_cmdline [1024];
-
-void KePrintSystemVersion()
-{
-	LogMsg("NanoShell (TM), December 2023 - " VersionString);
-	LogMsg("[%d Kb System Memory, %d Kb Usable Memory]", g_pMultibootInfo->mem_upper, MpGetNumAvailablePages() * 4);
-	LogMsg("Built on: %s %s", __DATE__, __TIME__);
-}
-
-void MbSetup (uint32_t check, uint32_t mbaddr)
-{
-	if (check != 0x2badb002)
-	{
-		ILogMsg("NanoShell has not booted from a Multiboot-compatible bootloader.  A bootloader such as GRUB is required to run NanoShell.");
-		KeStopSystem();
-	}
-	
-	// Read the multiboot data:
-	multiboot_info_t *mbi = (multiboot_info_t *)(mbaddr + KERNEL_BASE_ADDRESS);
-	g_pMultibootInfo = mbi;
-}
-
-multiboot_info_t* KiGetMultibootInfo()
-{
-	return g_pMultibootInfo;
-}
-
-void MbReadCmdLine ()
-{
-	uint32_t cmdlineaddr = g_pMultibootInfo->cmdline;
-	if (!(g_pMultibootInfo->flags & MULTIBOOT_INFO_CMDLINE))
-	{
-		strcpy (g_cmdline, "None!");
-	}
-	else if (cmdlineaddr < 0x800000)
-	{
-		strcpy (g_cmdline, ((char*)0xC0000000 + cmdlineaddr));
-	}
-	else
-	{
-		strcpy (g_cmdline, "None!");
-	}
-}
-
-void MbCheckMem()
-{
-	if (g_pMultibootInfo->mem_upper < 15360)
-	{
-		SwitchMode(0);
-		CoInitAsText(&g_debugConsole);
-		ILogMsg("NanoShell has not found enough extended memory.	16Mb of extended "
-		        "memory is\nrequired to run NanoShell.    You may need to upgrade "
-		        "your computer.");
-		KeStopSystem();
-	}
-}
-
-void MbCheckCmdLine()
-{
-	if (strcmp (g_cmdline, "None!") == 0 || g_cmdline[0] == 0)
-	{
-		ILogMsg("NanoShell cannot boot, because either:");
-		ILogMsg("- no cmdline was passed");
-		ILogMsg("- cmdline's address was %x%s", g_pMultibootInfo->cmdline, g_pMultibootInfo->cmdline >= 0x100000 ? " (was bigger than 8 MB)" : "");
-		KeStopSystem();
-	}
+    // neofetch style:
+    int npp = MpGetNumAvailablePages(), nfpp = MpGetNumFreePages();
+    
+    char timingInfo[128];
+    timingInfo[0] = 0;
+    FormatTime(timingInfo, FORMAT_TYPE_VAR, GetTickCount() / 1000);
+    LogMsg("\e[93m X    X");
+    LogMsg("\e[93m XX   X");
+    LogMsg("\e[93m X X  X");
+    LogMsg("\e[93m X  X X");
+    LogMsg("\e[93m X   XX");
+    LogMsg("\e[93m X    X\e[95m SSS");
+    LogMsg("\e[95m      S    S");
+    LogMsg("\e[95m      S     ");
+    LogMsg("\e[95m       SSS  ");
+    LogMsg("\e[95m          S ");
+    LogMsg("\e[95m      S    S");
+    LogMsg("\e[95m       SSS  ");
+    
+    // go up a bunch
+    LogMsgNoCr("\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A\e[A");
+    
+    LogMsg("\e[14G\e[91m OS:       \e[97mXShell Operating System");
+    LogMsg("\e[14G\e[91m Kernel:   \e[97m%s (%d)", VersionString, VersionNumber);
+    LogMsg("\e[14G\e[91m Uptime:   \e[97m%s", timingInfo);
+    LogMsg("\e[14G\e[91m CPU:      \e[97m%s", GetCPUName());
+    LogMsg("\e[14G\e[91m CPU type: \e[97m%s", GetCPUType());
+    LogMsg("\e[14G\e[91m Memory:   \e[97m%d KB / %d KB", (npp-nfpp)*4, npp*4);
+    LogMsg("\e[14G\e[91m ");
+    LogMsg("\e[14G\e[91m ");
+    LogMsg("\e[14G\e[91m ");
+    LogMsg("\e[14G\e[91m ");
+    LogMsg("\e[14G\e[91m ");
+    LogMsg("\e[14G\e[91m ");
+    LogMsg("\e[0m");
 }
 
 bool KiEmergencyMode()
 {
-	bool textMode = true;
-	ConfigEntry *pEntry = CfgGetEntry ("emergency");
-	if (pEntry)
-	{
-		if (strcmp(pEntry->value, "yes") == 0)
-		{
-			ILogMsg("Using emergency text mode");
-		}
-		else
-		{
-			textMode = false;
-		}
-	}
-	else
-	{
-		ILogMsg("No 'emergency' config key found, using text mode");
-	}
-	return textMode;
+    bool textMode = true;
+    ConfigEntry *pEntry = CfgGetEntry("emergency");
+    if (pEntry)
+    {
+        if (strcmp(pEntry->value, "yes") == 0)
+        {
+            ILogMsg("run text mode emergency");
+        }
+        else
+        {
+            textMode = false;
+        }
+    }
+    else
+    {
+        ILogMsg("No 'emergency' config key found, using text mode");
+    }
+    return textMode;
 }
 
-void KiLoop(long arg)
+void KePrintSystemVersion()
 {
-	TaskedFunction func = (TaskedFunction)arg;
-	
-	while (true)
-	{
-		// make sure the function can't exit.
-		// In the versions of DOS built in to Windows 9x, typing 'exit' while in safe cmd mode
-		// will just not exit. We simulate this by putting the tasked function into a while loop.
-		func(0);
-	}
+    LogMsg("XShell (TM), December 2023 - " VersionString);
+    LogMsg("[%d Kb System Memory, %d Kb Usable Memory]", g_pMultibootInfo->mem_upper, MpGetNumAvailablePages() * 4);
+    LogMsg("Built on: %s %s", __DATE__, __TIME__);
 }
 
-void KiLaunch (TaskedFunction func)
+void MbSetup(uint32_t check, uint32_t mbaddr)
 {
-	int err_code = 0;
-	//TODO: spawn a process instead
-	Task* pTask = KeStartTaskD(KiLoop, (long)func, &err_code, __FILE__, "Init", __LINE__);
-	
-	if (!pTask)
-		KeBugCheck(BC_EX_INIT_NOT_SPAWNABLE, NULL);
-	
-	KeTaskAssignTag(pTask, "System");
-	
-	// And take off!
-	KeUnsuspendTask(pTask);
-	KeDetachTask(pTask);
+    if (check != 0x2badb002)
+    {
+        ILogMsg("XShell has not booted from a Multiboot-compatible bootloader. A bootloader such as GRUB is required to run XShell.");
+        KeStopSystem();
+    }
+    
+    // Read the multiboot data:
+    multiboot_info_t *mbi = (multiboot_info_t *)(mbaddr + KERNEL_BASE_ADDRESS);
+    g_pMultibootInfo = mbi;
+}
+
+void MbCheckMem()
+{
+    if (g_pMultibootInfo->mem_upper < 15360)
+    {
+        SwitchMode(0);
+        CoInitAsText(&g_debugConsole);
+        ILogMsg("XShell has not found enough extended memory. 16Mb of extended "
+                "memory is\nrequired to run XShell. You may need to upgrade "
+                "your computer.");
+        KeStopSystem();
+    }
+}
+
+void MbCheckCmdLine()
+{
+    if (strcmp(g_cmdline, "None!") == 0 || g_cmdline[0] == 0)
+    {
+        ILogMsg("XShell cannot boot, because either:");
+        ILogMsg("- no cmdline was passed");
+        ILogMsg("- cmdline's address was %x%s", g_pMultibootInfo->cmdline, g_pMultibootInfo->cmdline >= 0x100000 ? " (was bigger than 8 MB)" : "");
+        KeStopSystem();
+    }
 }
